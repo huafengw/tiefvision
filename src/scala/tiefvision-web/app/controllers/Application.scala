@@ -47,7 +47,7 @@ class Application extends Controller {
   }
 
   def similarityFinder(isSupervised: Boolean = false) = Action {
-    val imageSearchResult = findSimilarImages(randomSmilarityImage, SimilarityFinder.getSimilarityFinder(isSupervised))
+    val imageSearchResult = findSimilarImages(randomSimilarityImage, SimilarityFinder.getSimilarityFinder(isSupervised))
     Ok(views.html.similarityFinder(imageSearchResult, isSupervised, "dresses_db", "bboxes_db"))
   }
 
@@ -60,7 +60,7 @@ class Application extends Controller {
     Ok(views.html.similarityFinder(imageSearchResult, isSupervised, "dresses_db", "bboxes_db"))
   }
 
-  def similarityEditor(isSupervised: Boolean = false) = similarityEditorFor(randomSmilarityImage)
+  def similarityEditor(isSupervised: Boolean = false) = similarityEditorFor(randomSimilarityImage)
 
   def similarityEditorFor(image: String) = Action.async {
     val imageSearchResult = findSimilarImages(image, SimilarityFinder.getSimilarityFinder(true))

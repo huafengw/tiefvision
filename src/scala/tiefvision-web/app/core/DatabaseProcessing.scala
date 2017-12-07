@@ -18,8 +18,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object DatabaseProcessing {
 
-  private lazy val Images = new File(s"${Configuration.HomeFolder}/resources/dresses-db/master").listFiles().map(_.getName)
-  private lazy val SimilarityImages = new File(s"${Configuration.HomeFolder}/src/torch/data/db/similarity/img-enc-cnn").listFiles().map(_.getName)
+  private lazy val Images = new File(Configuration.DbImagesFolder).listFiles().map(_.getName)
+  private lazy val SimilarityImages = new File(Configuration.SimilarityImagesFolder).listFiles().map(_.getName)
 
   private val random = scala.util.Random
 
@@ -160,7 +160,7 @@ object DatabaseProcessing {
   }
 
   def generateClassificationBackgroundDatasetFile(boundingBoxes: Seq[BoundingBox], dataset: Dataset, extendBoundingBox: Boolean) = {
-    val cropsFolderName = s"${Configuration.HomeFolder}/${Configuration.BackgroundCropImagesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}"
+    val cropsFolderName = s"${Configuration.BackgroundCropImagesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}"
     val cropsDirectoryFiles = new File(cropsFolderName).listFiles()
     val boundingBoxesInDataset = boundingBoxes.filter(_.dataset == dataset)
     val content = cropsDirectoryFiles.toSet
@@ -168,13 +168,13 @@ object DatabaseProcessing {
       .map(file => s"$cropsFolderName/${file.getName}").mkString("\n")
 
     val writer = new BufferedWriter(new OutputStreamWriter(
-      new FileOutputStream(s"${Configuration.HomeFolder}/${Configuration.BoundingBoxesFolder}/1-${dataset.toString.toLowerCase}.txt"), "utf-8"))
+      new FileOutputStream(s"${Configuration.BoundingBoxesFolder}/1-${dataset.toString.toLowerCase}.txt"), "utf-8"))
     writer.write(content)
     writer.close()
   }
 
   def generateClassificationDatasetFile(boundingBoxes: Seq[BoundingBox], dataset: Dataset, extendBoundingBox: Boolean) = {
-    val cropsFolderName = s"${Configuration.HomeFolder}/${Configuration.CropImagesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}"
+    val cropsFolderName = s"${Configuration.CropImagesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}"
     val cropsDirectoryFiles = new File(cropsFolderName).listFiles()
     val boundingBoxesInDataset = boundingBoxes.filter(_.dataset == dataset)
     val content = cropsDirectoryFiles.toSet
@@ -182,13 +182,13 @@ object DatabaseProcessing {
       .map(file => s"$cropsFolderName/${file.getName}").mkString("\n")
 
     val writer = new BufferedWriter(new OutputStreamWriter(
-      new FileOutputStream(s"${Configuration.HomeFolder}/${Configuration.BoundingBoxesFolder}/0-${dataset.toString.toLowerCase}.txt"), "utf-8"))
+      new FileOutputStream(s"${Configuration.BoundingBoxesFolder}/0-${dataset.toString.toLowerCase}.txt"), "utf-8"))
     writer.write(content)
     writer.close()
   }
 
   def generateBoundingBoxDatasetFile(boundingBoxes: Seq[BoundingBox], dataset: Dataset, extendBoundingBox: Boolean) = {
-    val cropsFolderName = s"${Configuration.HomeFolder}/${Configuration.CropImagesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}"
+    val cropsFolderName = s"${Configuration.CropImagesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}"
     val cropsDirectoryFiles = new File(cropsFolderName).listFiles()
     val boundingBoxesInDataset = boundingBoxes.filter(_.dataset == dataset)
     val content = cropsDirectoryFiles.toSet
@@ -196,7 +196,7 @@ object DatabaseProcessing {
       .map(file => s"$cropsFolderName/${file.getName}").mkString("\n")
 
     val writer = new BufferedWriter(new OutputStreamWriter(
-      new FileOutputStream(s"${Configuration.HomeFolder}/${Configuration.BoundingBoxesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}${dataset.toString}.txt"), "utf-8"))
+      new FileOutputStream(s"${Configuration.BoundingBoxesFolder}/${ImageProcessing.boundingBoxTypeFolder(extendBoundingBox)}${dataset.toString}.txt"), "utf-8"))
     writer.write(content)
     writer.close()
   }
@@ -251,15 +251,14 @@ object DatabaseProcessing {
   }
 
   def cropsGenerated(scaledBoundingBox: BoundingBox): Boolean = {
-    val cropsFolderName = s"${Configuration.HomeFolder}/${Configuration.CropImagesFolder}"
-    val cropsDirectoryFiles = new File(cropsFolderName).listFiles()
-    cropsDirectoryFiles.foldLeft(false)((exists, file) => exists || file.getName.startsWith(scaledBoundingBox.name))
+    val cropsDirectoryFiles = new File(Configuration.CropImagesFolder).listFiles()
+    Option(cropsDirectoryFiles).exists{
+      _.foldLeft(false)((exists, file) => exists || file.getName.startsWith(scaledBoundingBox.name))
+    }
   }
 
   def backgroundCropsGenerated(scaledBoundingBox: BoundingBox): Boolean = {
-    val cropsFolderName = s"${Configuration.HomeFolder}/${Configuration.BackgroundCropImagesFolder}"
-    val cropsDirectoryFiles = new File(cropsFolderName).listFiles()
+    val cropsDirectoryFiles = new File(Configuration.BackgroundCropImagesFolder).listFiles()
     cropsDirectoryFiles.foldLeft(false)((exists, file) => exists || file.getName.startsWith(scaledBoundingBox.name))
   }
-
 }

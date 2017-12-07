@@ -15,13 +15,13 @@ import scala.sys.process.Process
 
 object ImageProcessing {
 
-  lazy val Images = new File(s"${Configuration.HomeFolder}/resources/dresses-db/master").listFiles().map(_.getName)
-  lazy val SimilarityImages = new File(s"${Configuration.HomeFolder}/src/torch/data/db/similarity/img-enc-cnn").listFiles().map(_.getName)
+  lazy val Images = new File(Configuration.DbImagesFolder).listFiles().map(_.getName)
+  lazy val SimilarityImages = new File(Configuration.SimilarityImagesFolder).listFiles().map(_.getName)
   val random = scala.util.Random
 
   def randomImage = Images(random.nextInt(Images.length))
 
-  def randomSmilarityImage = SimilarityImages(random.nextInt(SimilarityImages.length))
+  def randomSimilarityImage = SimilarityImages(random.nextInt(SimilarityImages.length))
 
   lazy val luaConfigFlag: String = {
     Option(sys.props("luaConfig")) match {
@@ -70,11 +70,11 @@ object ImageProcessing {
 
   def saveImageScaled(scaledBoundingBox: BoundingBox, scale: Int) = {
     import sys.process._
-    val destinationFile = s"${Configuration.HomeFolder}/${Configuration.ScaledImagesFolder}/${scaledBoundingBox.name}_${scale}"
+    val destinationFile = s"${Configuration.ScaledImagesFolder}/${scaledBoundingBox.name}_$scale"
     if (!Files.exists(Paths.get(destinationFile))) {
-      val sourceFile = s"${Configuration.HomeFolder}/${Configuration.DbImagesFolder}/${scaledBoundingBox.name}"
-      val scaleImagesCommand = s"convert $sourceFile  -resize ${scaledBoundingBox.width}x $destinationFile"
-      scaleImagesCommand !!;
+      val sourceFile = s"${Configuration.DbImagesFolder}/${scaledBoundingBox.name}"
+      val scaleImagesCommand = s"convert $sourceFile -resize ${scaledBoundingBox.width}x $destinationFile"
+      scaleImagesCommand !!
     }
   }
 
@@ -93,10 +93,10 @@ object ImageProcessing {
           val destinationFilename =
             s"${scaledBoundingBox.name}___${scaledBoundingBox.width}_${scaledBoundingBox.height}_" +
               s"${diff.left}_${diff.top}_${diff.right + Configuration.CropSize}_${diff.bottom + Configuration.CropSize}.jpg"
-          val destinationFilePath = s"${Configuration.HomeFolder}/${Configuration.BackgroundCropImagesFolder}/${boundingBoxTypeFolder(extendBoundingBox)}/${destinationFilename}"
-          val sourceFilePath = s"${Configuration.HomeFolder}/${Configuration.ScaledImagesFolder}/${scaledBoundingBox.name}_${scale}"
+          val destinationFilePath = s"${Configuration.BackgroundCropImagesFolder}/${boundingBoxTypeFolder(extendBoundingBox)}/$destinationFilename"
+          val sourceFilePath = s"${Configuration.ScaledImagesFolder}/${scaledBoundingBox.name}_$scale"
           samples = samples + 1
-          s"convert ${sourceFilePath} -crop ${Configuration.CropSize}x${Configuration.CropSize}+${randomCrop.left}+${randomCrop.top} -type truecolor ${destinationFilePath}" !!;
+          s"convert $sourceFilePath -crop ${Configuration.CropSize}x${Configuration.CropSize}+${randomCrop.left}+${randomCrop.top} -type truecolor $destinationFilePath" !!;
         }
       }
     }
@@ -112,8 +112,8 @@ object ImageProcessing {
         val extendedBoundingBox = {
           if (extendBoundingBox)
             scaledBoundingBox.copy(
-              top = math.max(1, (scaledBoundingBox.top - (scaledBoundingBox.bottom - scaledBoundingBox.top) * 0.10)).toInt,
-              bottom = math.min(scaledBoundingBox.height, (scaledBoundingBox.bottom + (scaledBoundingBox.bottom - scaledBoundingBox.top) * 0.50)).toInt)
+              top = math.max(1, scaledBoundingBox.top - (scaledBoundingBox.bottom - scaledBoundingBox.top) * 0.10).toInt,
+              bottom = math.min(scaledBoundingBox.height, scaledBoundingBox.bottom + (scaledBoundingBox.bottom - scaledBoundingBox.top) * 0.50).toInt)
           else scaledBoundingBox
         }
         val randomCrop = generateRandomCrop(scaledBoundingBox)
@@ -122,10 +122,10 @@ object ImageProcessing {
           val destinationFilename =
             s"${scaledBoundingBox.name}___${scaledBoundingBox.width}_${scaledBoundingBox.height}_" +
               s"${diff.left}_${diff.top}_${diff.right + Configuration.CropSize}_${diff.bottom + Configuration.CropSize}.jpg"
-          val destinationFilePath = s"${Configuration.HomeFolder}/${Configuration.CropImagesFolder}/${boundingBoxTypeFolder(extendBoundingBox)}/${destinationFilename}"
-          val sourceFilePath = s"${Configuration.HomeFolder}/${Configuration.ScaledImagesFolder}/${scaledBoundingBox.name}_${scale}"
+          val destinationFilePath = s"${Configuration.CropImagesFolder}/${boundingBoxTypeFolder(extendBoundingBox)}/$destinationFilename"
+          val sourceFilePath = s"${Configuration.ScaledImagesFolder}/${scaledBoundingBox.name}_$scale"
           samples = samples + 1
-          s"convert ${sourceFilePath} -crop ${Configuration.CropSize}x${Configuration.CropSize}+${randomCrop.left}+${randomCrop.top} -type truecolor ${destinationFilePath}" !!;
+          s"convert $sourceFilePath -crop ${Configuration.CropSize}x${Configuration.CropSize}+${randomCrop.left}+${randomCrop.top} -type truecolor $destinationFilePath" !!;
         }
       }
     }
