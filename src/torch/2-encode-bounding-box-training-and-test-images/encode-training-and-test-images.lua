@@ -140,15 +140,15 @@ local function saveEncodedData()
 
   local trainoutProc = postprocessOutput(trainout, mean, std)
   local meantest, stdtest = stats(trainoutProc)
-  --assert(torch.mean(meantest) < 0.0001, 'mean should be zero')
+  assert(torch.mean(meantest) < 0.0001, 'mean should be zero')
   assert(math.abs(torch.mean(stdtest) - 1) < 0.0001, 'std should be one')
 
 
   local testin, testout = loadData(encoder, tiefvision_commons.resourcePath('bounding-boxes/extendedTEST.txt'))
   local testoutProc = postprocessOutput(testout, mean, std)
   meantest, stdtest = stats(testoutProc)
-  --assert(torch.mean(meantest) < 0.2, 'test mean should be close to zero')
-  --assert(math.abs(torch.mean(stdtest) - 1) < 0.3, 'test std should be close to one')
+  assert(torch.mean(meantest) < 0.2, 'test mean should be close to zero')
+  assert(math.abs(torch.mean(stdtest) - 1) < 0.3, 'test std should be close to one')
 
   for i = 1, #testin do
     local testoutTr = testoutProc[i]:transpose(1, 2)

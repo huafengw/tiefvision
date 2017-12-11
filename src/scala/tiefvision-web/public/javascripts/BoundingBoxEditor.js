@@ -49,9 +49,7 @@ var BoundingBoxEditor = function (imageName, left, right, top, bottom) {
   $scope.canvas.addEventListener('mousemove',
     function(evt) {
       var mousePos = $scope.getMousePos($scope.canvas, evt);
-      if($scope.state === "bottomRight") {
-        $scope.drawBBox(1, 1, mousePos.x, mousePos.y);
-      } else if($scope.state === "topLeft") {
+      if($scope.state === "topLeft") {
         $scope.drawBBox(
           mousePos.x,
           mousePos.y,
