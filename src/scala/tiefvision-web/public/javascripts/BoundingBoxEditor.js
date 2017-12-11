@@ -32,12 +32,16 @@ var BoundingBoxEditor = function (imageName, left, right, top, bottom) {
   });
 
   $scope.saveButton.addEventListener("click", function(){
+     var left = Math.min($scope.boundingBox.left, $scope.boundingBox.right);
+     var right = Math.max($scope.boundingBox.left, $scope.boundingBox.right);
+     var top = Math.min($scope.boundingBox.top, $scope.boundingBox.bottom);
+     var bottom = Math.max($scope.boundingBox.top, $scope.boundingBox.bottom);
      window.location = "/save_bounding_box?" +
       "name=" + $scope.boundingBox.name +
-      "&left=" + $scope.boundingBox.left +
-      "&right=" + $scope.boundingBox.right +
-      "&top=" + $scope.boundingBox.top +
-      "&bottom=" + $scope.boundingBox.bottom +
+      "&left=" + left +
+      "&right=" + right +
+      "&top=" + top +
+      "&bottom=" + bottom +
       "&width=" + $scope.width +
       "&height=" + $scope.height;
   });
