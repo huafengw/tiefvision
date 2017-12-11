@@ -17,8 +17,8 @@ object Configuration {
   val scaleLevels = Seq(2, 3)
   val testPercentage = 0.05
 
-  def mkdirIfNotExist(dir: String): Unit = {
-    val dir = new File(dir)
+  def mkdirIfNotExist(path: String): Unit = {
+    val dir = new File(path)
     if (!dir.exists()) {
       dir.mkdirs()
     }
