@@ -7,7 +7,7 @@ package controllers
 
 import java.io.File
 import com.google.inject.Inject
-import play.api.{Environment, Logger, Play}
+import play.api.{Environment, Logger}
 import play.api.mvc._
 
 class TiefVisionResourcesAssets @Inject()(environment: Environment) extends Controller {

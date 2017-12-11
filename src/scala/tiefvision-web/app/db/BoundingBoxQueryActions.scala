@@ -5,17 +5,12 @@
   */
 package db
 
-import java.util.concurrent.TimeUnit
-
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import slick.driver.H2Driver.api._
 import slick.driver.JdbcProfile
 import slick.jdbc.JdbcBackend
-import slick.jdbc.meta.MTable
 import play.api.{Play, Logger}
-import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
 
 object BoundingBoxQueryActions extends App with HasDatabaseConfig[JdbcProfile] {
 

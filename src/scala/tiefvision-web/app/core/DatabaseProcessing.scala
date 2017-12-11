@@ -18,12 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object DatabaseProcessing {
 
-  private lazy val Images = new File(Configuration.DbImagesFolder).listFiles().map(_.getName)
-  private lazy val SimilarityImages = new File(Configuration.SimilarityImagesFolder).listFiles().map(_.getName)
-
   private val random = scala.util.Random
-
-  def randomImage = Images(random.nextInt(Images.length))
 
   def getUnsupervisedAccuracy() = {
     SimilarityQueryActions.getAllSimilarities().map { allSimilarities =>
@@ -91,7 +86,7 @@ object DatabaseProcessing {
     } yield {
       val currentRandomFlippedSimilarities = flippedSimilarities.map(_.reference).toSet &~ (unflippedSimilarities.map(_.reference).toSet)
       val randomFlippedSimilaritiesCountToAdd = unflippedSimilarities.map(_.reference).size - currentRandomFlippedSimilarities.size
-      val possibleFlippedSimilaritiesToAdd = SimilarityImages.toSet.&~(unflippedSimilarities.map(_.reference).toSet.union(currentRandomFlippedSimilarities))
+      val possibleFlippedSimilaritiesToAdd = ImageProcessing.SimilarityImages.toSet.&~(unflippedSimilarities.map(_.reference).toSet.union(currentRandomFlippedSimilarities))
       val flippedSimilaritiesToAdd = random.shuffle(possibleFlippedSimilaritiesToAdd).take(randomFlippedSimilaritiesCountToAdd)
       flippedSimilaritiesToAdd.foreach { flippedSimilarityToAdd =>
         addFlippedSimilarity(flippedSimilarityToAdd)
@@ -259,6 +254,8 @@ object DatabaseProcessing {
 
   def backgroundCropsGenerated(scaledBoundingBox: BoundingBox): Boolean = {
     val cropsDirectoryFiles = new File(Configuration.BackgroundCropImagesFolder).listFiles()
-    cropsDirectoryFiles.foldLeft(false)((exists, file) => exists || file.getName.startsWith(scaledBoundingBox.name))
+    Option(cropsDirectoryFiles).exists {
+      _.foldLeft(false)((exists, file) => exists || file.getName.startsWith(scaledBoundingBox.name))
+    }
   }
 }
