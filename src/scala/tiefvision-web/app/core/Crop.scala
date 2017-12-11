@@ -27,4 +27,7 @@ case class Crop(left: Int, right: Int, top: Int, bottom: Int) {
     Math.max(left, boundingBoxCrop.left) <= Math.min(right, boundingBoxCrop.right) &&
       Math.max(top, boundingBoxCrop.top) <= Math.min(bottom, boundingBoxCrop.bottom)
 
+  override def toString: String = {
+    s"Top left: ($top, $left) Bottom right: ($bottom, $right)"
+  }
 }

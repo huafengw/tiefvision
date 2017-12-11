@@ -46,4 +46,8 @@ case class BoundingBox(name: String, top: Int,
     width  = (width.toDouble  / denominator).ceil.toInt,
     height = (height.toDouble / denominator).ceil.toInt,
     dataset = dataset)
+
+  override def toString: String = {
+    s"Name: $name, Size: $height * $width, Top left: ($top, $left) Bottom right: ($bottom, $right)"
+  }
 }
