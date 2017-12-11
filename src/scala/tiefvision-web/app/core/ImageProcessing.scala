@@ -9,6 +9,7 @@ package core
 import java.io.File
 import java.nio.file.{Files, Paths}
 
+import play.api.Logger
 import controllers.Configuration
 import db.BoundingBox
 import scala.sys.process.Process

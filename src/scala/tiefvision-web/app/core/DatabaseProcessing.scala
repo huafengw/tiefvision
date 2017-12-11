@@ -9,6 +9,7 @@ import java.io.{BufferedWriter, File, FileOutputStream, OutputStreamWriter}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 
+import play.api.Logger
 import controllers.Configuration
 import core.ImageProcessing.SimilarityFinder
 import db.Dataset._
