@@ -38,9 +38,12 @@ object Configuration {
     mkdirIfNotExist(s"$BackgroundCropImagesFolder/original")
     mkdirIfNotExist(s"$HomeFolder/src/torch/data/bbox-train-in")
     mkdirIfNotExist(s"$HomeFolder/src/torch/data/bbox-train-out")
+    mkdirIfNotExist(s"$HomeFolder/src/torch/data/bbox-test-in")
     mkdirIfNotExist(s"$HomeFolder/src/torch/data/bbox-test-out")
     mkdirIfNotExist(s"$HomeFolder/src/torch/classification/0/test")
     mkdirIfNotExist(s"$HomeFolder/src/torch/classification/1/test")
+    mkdirIfNotExist(s"$HomeFolder/src/torch/data/classification/0/train/")
+    mkdirIfNotExist(s"$HomeFolder/src/torch/data/classification/1/train/")
   }
 
   mkdirs()
