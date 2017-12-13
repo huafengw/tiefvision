@@ -18,7 +18,7 @@ local database = require('0-tiefvision-commons/tiefvision_config_loader').load()
 local function similarityDb()
   local dataFolder = tiefvision_commons.dataPath('db/similarity/img-similarity-deeprank')
   local files = tiefvision_commons.getFiles(dataFolder)
-  local filesAlreadyProcessed = database.keys()
+  local filesAlreadyProcessed = database:keys()
   local filesRemaining = tiefvision_commons.tableSubtraction(files, filesAlreadyProcessed)
 
   for referenceIndex = 1, #filesRemaining do
@@ -41,7 +41,7 @@ local function similarityDb()
     local similarity = similarity_lib.similarity(referenceEncoding, flippedEncoding)
     similarities[reference] = similarity or -1
 
-    database.write(reference, similarities)
+    database:write(reference, similarities)
 
     if referenceIndex % 10 == 0 then
       collectgarbage()

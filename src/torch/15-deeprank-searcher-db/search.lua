@@ -16,7 +16,7 @@ local search_commons = require '10-similarity-searcher-cnn-db/search_commons'
 local database = tiefvision_config_loader.load().database.supervised_similarity
 
 local function getTestError(reference)
-  local similarities = database.read(reference)
+  local similarities = database:read(reference)
 
   local comparisonTable = {}
   for file, sim in pairs(similarities) do
@@ -24,7 +24,7 @@ local function getTestError(reference)
   end
 
   table.sort(comparisonTable, search_commons.sortCmpTable)
-  search_commons.printCmpTable(comparisonTable)
+  --search_commons.printCmpTable(comparisonTable)
 end
 
 local function getOptions()

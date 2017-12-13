@@ -24,7 +24,7 @@ function tiefvision_commons.getLines(filename)
   if trainFile ~= nil then
     local index = 1
     for trainFileLine in trainFile:lines() do
-      print(trainFileLine)
+      --print(trainFileLine)
       if (tiefvision_commons.fileExists(trainFileLine)) then
         lines[index] = trainFileLine
         index = index + 1

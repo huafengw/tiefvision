@@ -26,6 +26,10 @@ local function getFiles(folder)
   return files
 end
 
+local function isNan(num)
+  return num ~= num
+end
+
 local folder = tiefvision_commons.resourcePath('dresses-db/master')
 local bboxesFolder = tiefvision_commons.resourcePath('dresses-db/bboxes')
 local flippedBboxesFolder = tiefvision_commons.resourcePath('dresses-db/bboxes-flipped')
@@ -41,18 +45,20 @@ for fileIndex = 1, #files do
       local ymin = bboxes[i][2]
       local xmax = bboxes[i][3]
       local ymax = bboxes[i][4]
-      print(xmin, ymin, xmax, ymax)
+      if not isNan(xmin) then
+        print(xmin, ymin, xmax, ymax)
 
-      local inputCropped = image.crop(input, xmin, ymin, xmax, ymax)
-      paths.mkdir(bboxesFolder .. '/' .. i)
-      image.save(bboxesFolder .. '/' .. i .. '/' .. files[fileIndex], inputCropped)
+        local inputCropped = image.crop(input, xmin, ymin, xmax, ymax)
+        paths.mkdir(bboxesFolder .. '/' .. i)
+        image.save(bboxesFolder .. '/' .. i .. '/' .. files[fileIndex], inputCropped)
 
-      -- generate flipped images
-      local flippedInput = image.hflip(inputCropped)
-      paths.mkdir(flippedBboxesFolder .. '/' .. i)
-      image.save(flippedBboxesFolder .. '/' .. i .. '/' .. files[fileIndex], flippedInput)
+        -- generate flipped images
+        local flippedInput = image.hflip(inputCropped)
+        paths.mkdir(flippedBboxesFolder .. '/' .. i)
+        image.save(flippedBboxesFolder .. '/' .. i .. '/' .. files[fileIndex], flippedInput)
 
-      collectgarbage()
+        collectgarbage()
+      end  
     end
   end
 end

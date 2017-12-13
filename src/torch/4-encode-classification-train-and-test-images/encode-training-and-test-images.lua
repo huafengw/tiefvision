@@ -14,7 +14,7 @@ local tiefvision_commons = require '0-tiefvision-commons/tiefvision_commons'
 local batch_size = 64
 
 local function getEncodedInput(name, encoder)
-  print(name)
+  --print(name)
   local input = tiefvision_commons.load(name)
   local encodedInput = encoder:forward(input)[2]
   collectgarbage()

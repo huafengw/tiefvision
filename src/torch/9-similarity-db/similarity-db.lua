@@ -23,7 +23,7 @@ function similarityDb(imageFolder, reprocess, kNearestNeighbors)
 
   local filesToProcess = files
   if not reprocess then
-    local filesAlreadyProcessed = database.keys()
+    local filesAlreadyProcessed = database:keys()
     filesToProcess = tiefvision_commons.tableSubtraction(files, filesAlreadyProcessed)
   end
 
@@ -45,7 +45,7 @@ function similarityDb(imageFolder, reprocess, kNearestNeighbors)
       similarities = tiefvision_reduction.getNearestNeighbors(similarities, kNearestNeighbors)
     end
 
-    database.write(reference, similarities)
+    database:write(reference, similarities)
 
     if referenceIndex % 5 == 0 then
       collectgarbage()

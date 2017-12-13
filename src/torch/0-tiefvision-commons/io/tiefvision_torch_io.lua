@@ -13,10 +13,23 @@ package.path = string.format("%s;%s/?.lua", os.getenv("LUA_PATH"), torchFolder)
 local torch = require 'torch'
 
 local tiefvision_commons = require '0-tiefvision-commons/tiefvision_commons'
-local tiefvision_torch_io = {}
+local Tiefvision_torch_io = {}
+Tiefvision_torch_io.__index = Tiefvision_torch_io
 
-function tiefvision_torch_io.read(key)
-  local file = tiefvision_commons.path(tiefvision_torch_io.folder, key)
+setmetatable(Tiefvision_torch_io, {
+  __call = function (cls, path)
+    return cls.new(path)
+  end,
+})
+
+function Tiefvision_torch_io.new(path)
+  local self = setmetatable({}, Tiefvision_torch_io)
+  self.folder = path
+  return self
+end
+
+function Tiefvision_torch_io:read(key)
+  local file = tiefvision_commons.path(self.folder, key)
   if not paths.filep(file) then
     return nil
   end
@@ -24,27 +37,20 @@ function tiefvision_torch_io.read(key)
   return torch.load(file)
 end
 
-function tiefvision_torch_io.write(key, value)
-  local file = tiefvision_commons.path(tiefvision_torch_io.folder, key)
+function Tiefvision_torch_io:write(key, value)
+  local file = tiefvision_commons.path(self.folder, key)
 
   paths.mkdir(paths.dirname(file))
   torch.save(file, value)
 end
 
-function tiefvision_torch_io.keys()
+function Tiefvision_torch_io:keys()
   local files = {}
-  for file in paths.files(tiefvision_torch_io.folder) do
+  for file in paths.files(self.folder) do
     files[#files + 1] = file
   end
 
   return files
 end
 
-local factory = {}
-setmetatable(factory, { __call = function(_, folder)
-  tiefvision_torch_io.folder = folder
-
-  return tiefvision_torch_io
-end })
-
-return factory
+return Tiefvision_torch_io
