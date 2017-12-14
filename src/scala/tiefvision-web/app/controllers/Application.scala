@@ -5,10 +5,13 @@
   */
 package controllers
 
+import java.nio.file.Files
+
 import _root_.db._
 import core.{DatabaseProcessing, ImageProcessing}
 import ImageProcessing._
 import play.api.mvc._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application extends Controller {
@@ -36,9 +39,30 @@ class Application extends Controller {
     request.body.file("picture").map { picture =>
       import java.io.File
       val filename = picture.filename
-      val contentType = picture.contentType
       picture.ref.moveTo(new File(s"${Configuration.HomeFolder}/resources/dresses-db/uploaded/master/${filename}"), true)
       Redirect(routes.Application.similarityFinderUploadResults(filename))
+    }.getOrElse {
+      Redirect(routes.Application.index).flashing(
+        "error" -> "Missing file"
+      )
+    }
+  }
+
+  def cropImageUploadForm() = Action {
+    Ok(views.html.cropImageUploadForm())
+  }
+
+  def crop = Action(parse.multipartFormData) { request =>
+    request.body.file("picture").map { picture =>
+      import scala.sys.process._
+      val filename = picture.filename
+      val tmpFile = Files.createTempFile("toCrop", ".jpg").toFile
+      val cropped = Files.createTempFile("cropped", ".jpg").toFile
+      picture.ref.moveTo(tmpFile, true)
+      val command = s"luajit ${Configuration.HomeFolder}/src/torch/7-bboxes-images/getBoundingBox.lua" +
+        s" ${tmpFile.getAbsolutePath} ${cropped.getAbsolutePath}"
+      command.!!
+      Ok(views.html.croppedImage(cropped.getAbsolutePath))
     }.getOrElse {
       Redirect(routes.Application.index).flashing(
         "error" -> "Missing file"

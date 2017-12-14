@@ -96,7 +96,7 @@ object DatabaseProcessing {
 
   private def addFlippedSimilarity(flippedSimilarityToAdd: String) = {
     val closestImageOpt = ImageProcessing.findSimilarImages(flippedSimilarityToAdd,
-      SimilarityFinder.getSimilarityFinder(true)).distanceToSimilarImages.headOption
+      SimilarityFinder.getSimilarityFinder(false)).distanceToSimilarImages.headOption
     closestImageOpt.map { closestImage =>
       val closestImageName = closestImage._2
       SimilarityQueryActions.insertOrUpdate(
