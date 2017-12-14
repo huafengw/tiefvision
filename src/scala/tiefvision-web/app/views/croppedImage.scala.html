@@ -20,15 +20,20 @@
 </div>
 
 
-<div class="container-fluid text-center">
-  <div>
-    <h5>Original Image</h5>
-    <img id="reference" class="img-thumbnail" src="/@{originalImage}"/>
-  </div>
-  <div>
-    <h5>Cropped Image</h5>
-    <img id="reference" class="img-thumbnail" src="/@{croppedImage}"/>
-  </div>
-</div>
-
+<table>
+  <tr>
+    <td>
+      <div class="text-center" style="width: 50%; display: inline">
+        <h5>Original Image</h5>
+        <img id="reference" class="img-thumbnail" src="/@{originalImage}"/>
+      </div>
+    </td>
+    <td>
+       <div class="text-center" style="width: 50%; display: inline">
+         <h5>Cropped Image</h5>
+         <img id="reference" class="img-thumbnail" src="/@{croppedImage}"/>
+       </div>
+     </td>
+  </tr>
+</table>
 }
