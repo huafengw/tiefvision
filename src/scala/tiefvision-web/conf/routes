@@ -36,6 +36,7 @@ GET     /dresses_db/*file          controllers.TiefVisionResourcesAssets.atResou
 GET     /bboxes_db/*file           controllers.TiefVisionResourcesAssets.atResources(path="resources/dresses-db/bboxes/1", file)
 GET     /uploaded_dresses_db/*file          controllers.TiefVisionResourcesAssets.atResources(path="resources/dresses-db/uploaded/master", file)
 GET     /uploaded_bboxes_db/*file           controllers.TiefVisionResourcesAssets.atResources(path="resources/dresses-db/uploaded/bbox", file)
+GET     /temp/*file           controllers.TiefVisionResourcesAssets.atResources(path="resources/temp", file)
 
 # Crop image
 GET     /crop_image_upload_form   controllers.Application.cropImageUploadForm()

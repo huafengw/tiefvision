@@ -56,10 +56,10 @@ class Application extends Controller {
     request.body.file("picture").map { picture =>
       import scala.sys.process._
       val tmpFile = Files.createTempFile("toCrop", ".jpg").toFile
-      val cropped = s"resources/temp/cropped${tmpFile.getName}"
+      val cropped = s"temp/cropped${tmpFile.getName}"
       picture.ref.moveTo(tmpFile, true)
       val command = s"luajit ${Configuration.HomeFolder}/src/torch/7-bboxes-images/getBoundingBox.lua" +
-        s" ${tmpFile.getAbsolutePath} ${Configuration.HomeFolder}/$cropped"
+        s" ${tmpFile.getAbsolutePath} ${Configuration.HomeFolder}/resources/$cropped"
       command.!!
       tmpFile.delete()
       Ok(views.html.croppedImage(cropped))
