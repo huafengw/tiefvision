@@ -3,9 +3,22 @@
 * You may use, distribute and modify this code under the
 * terms of the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0.txt).
 *@
+@import helper._
 @(croppedImage: String)
 
 @layout.html {
+<div class="container-fluid">
+  <div class="jumbotron">
+    @form(action = routes.Application.crop(), 'enctype -> "multipart/form-data") {
+      <div class="form-group">
+        <label for="picture">Select an image to crop</label>
+        <input type="file" class="form-control" name="picture" id="picture">
+      </div>
+      <button type="submit" class="btn btn-default">Crop the image</button>
+    }
+  </div>
+</div>
+
 
 <div class="container-fluid text-center">
   <div>
