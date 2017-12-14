@@ -5,6 +5,7 @@
   */
 package controllers
 
+import java.io.File
 import java.nio.file.Files
 
 import _root_.db._
@@ -55,14 +56,13 @@ class Application extends Controller {
   def crop = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       import scala.sys.process._
-      val tmpFile = Files.createTempFile("toCrop", ".jpg").toFile
-      val cropped = s"temp/cropped${tmpFile.getName}"
-      picture.ref.moveTo(tmpFile, true)
+      val tmpFile = s"temp/${picture.filename}"
+      val cropped = s"temp/cropped${picture.filename}"
+      picture.ref.moveTo(new File(tmpFile), true)
       val command = s"luajit ${Configuration.HomeFolder}/src/torch/7-bboxes-images/getBoundingBox.lua" +
-        s" ${tmpFile.getAbsolutePath} ${Configuration.HomeFolder}/resources/$cropped"
+        s" ${new File(tmpFile).getAbsolutePath} ${Configuration.HomeFolder}/resources/$cropped"
       command.!!
-      tmpFile.delete()
-      Ok(views.html.croppedImage(cropped))
+      Ok(views.html.croppedImage(tmpFile, cropped))
     }.getOrElse {
       Redirect(routes.Application.index).flashing(
         "error" -> "Missing file"
