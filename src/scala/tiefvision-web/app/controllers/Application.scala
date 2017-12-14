@@ -56,13 +56,14 @@ class Application extends Controller {
   def crop = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       import scala.sys.process._
-      val tmpFile = s"temp/${picture.filename}"
+      val originalFile = s"temp/${picture.filename}"
+      val originalFileAbs = s"${Configuration.HomeFolder}/resources/$originalFile"
       val cropped = s"temp/cropped${picture.filename}"
-      picture.ref.moveTo(new File(tmpFile), true)
+      picture.ref.moveTo(new File(originalFileAbs), true)
       val command = s"luajit ${Configuration.HomeFolder}/src/torch/7-bboxes-images/getBoundingBox.lua" +
-        s" ${new File(tmpFile).getAbsolutePath} ${Configuration.HomeFolder}/resources/$cropped"
+        s" $originalFileAbs ${Configuration.HomeFolder}/resources/$cropped"
       command.!!
-      Ok(views.html.croppedImage(tmpFile, cropped))
+      Ok(views.html.croppedImage(originalFile, cropped))
     }.getOrElse {
       Redirect(routes.Application.index).flashing(
         "error" -> "Missing file"
