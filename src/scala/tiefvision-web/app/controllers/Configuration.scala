@@ -32,6 +32,7 @@ object Configuration {
     mkdirIfNotExist(DbImagesFolder)
     mkdirIfNotExist(SimilarityImagesFolder)
     mkdirIfNotExist(UploadedImagesFolder)
+    mkdirIfNotExist(s"$HomeFolder/resources/temp")
     mkdirIfNotExist(s"$CropImagesFolder/extended")
     mkdirIfNotExist(s"$CropImagesFolder/original")
     mkdirIfNotExist(s"$BackgroundCropImagesFolder/extended")

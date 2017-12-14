@@ -55,14 +55,14 @@ class Application extends Controller {
   def crop = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
       import scala.sys.process._
-      val filename = picture.filename
       val tmpFile = Files.createTempFile("toCrop", ".jpg").toFile
-      val cropped = Files.createTempFile("cropped", ".jpg").toFile
+      val cropped = s"resources/temp/cropped${tmpFile.getName}"
       picture.ref.moveTo(tmpFile, true)
       val command = s"luajit ${Configuration.HomeFolder}/src/torch/7-bboxes-images/getBoundingBox.lua" +
-        s" ${tmpFile.getAbsolutePath} ${cropped.getAbsolutePath}"
+        s" ${tmpFile.getAbsolutePath} ${Configuration.HomeFolder}/$cropped"
       command.!!
-      Ok(views.html.croppedImage(cropped.getAbsolutePath))
+      tmpFile.delete()
+      Ok(views.html.croppedImage(cropped))
     }.getOrElse {
       Redirect(routes.Application.index).flashing(
         "error" -> "Missing file"
@@ -140,6 +140,4 @@ class Application extends Controller {
       Ok("Classification Train and Test Files Generated.")
     }
   }
-
-
 }
