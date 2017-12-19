@@ -65,8 +65,22 @@ local function gradUpdate(similarityModel, x, criterion, learningRate)
   return err
 end
 
+local function getLines(filename)
+  local trainFile = io.open(filename)
+  local lines = {}
+  if trainFile ~= nil then
+    local index = 1
+    for trainFileLine in trainFile:lines() do
+      lines[index] = trainFileLine
+      index = index + 1
+    end
+    io.close(trainFile)
+  end
+  return lines
+end
+
 local function getDataSet(file)
-  local lines = tiefvision_commons.getLines(tiefvision_commons.resourcePath('dresses-db', file))
+  local lines = getLines(tiefvision_commons.resourcePath('dresses-db', file))
   local trainingSet = {}
   for i = 1, #lines do
     local reference, similar, different = string.match(lines[i], "(.+),(.+),(.+)")

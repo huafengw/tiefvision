@@ -113,14 +113,14 @@ local function train(model, criterion, epochs, optimState)
   model:training()
   for epoch = 1, epochs do
     math.randomseed(os.time())
-    local batchesIn1 = getBatchesInClassAndType(1, 'train')
-    local batchesIn2 = getBatchesInClassAndType(2, 'train')
-    for iter = 1, batchesIn1 + batchesIn2 do
-      local batchIndexClass1 = math.random(batchesIn1)
-      local batchIndexClass2 = math.random(batchesIn2)
-      local batchClass1 = torch.load(getFilename('train', 1, batchIndexClass1)):cuda()
-      local batchClass2 = torch.load(getFilename('train', 2, batchIndexClass2)):cuda()
-      local batches = { batchClass1, batchClass2 }
+    local batchesInForeground = getBatchesInClassAndType(1, 'train')
+    local batchesInBackground = getBatchesInClassAndType(2, 'train')
+    for iter = 1, batchesInForeground + batchesInBackground do
+      local batchIndexForeground = math.random(batchesInForeground)
+      local batchIndexBackground = math.random(batchesInBackground)
+      local batchClassForeground = torch.load(getFilename('train', 1, batchIndexForeground)):cuda()
+      local batchClassBackground = torch.load(getFilename('train', 2, batchIndexBackground)):cuda()
+      local batches = { batchClassForeground, batchClassBackground }
       for batchIndex = 1, batchSize do
         -- select random class
         local cl = math.random(2)
