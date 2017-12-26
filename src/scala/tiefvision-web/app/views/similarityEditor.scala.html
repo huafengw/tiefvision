@@ -18,9 +18,9 @@
 </div>
 
 <div class="container-fluid result-container">
-  @imageSearchResultDisplay.zipWithIndex.map { case ((_, image), index) =>
+  @imageSearchResultDisplay.zipWithIndex.map { case ((similarity, image), index) =>
     <div class="pull-left text-center">
-      <h5>@helpers.rank(index + 1) Closest Dress</h5>
+      <h5>@helpers.rank(index + 1) Closest Dress (@{val formated = f"$similarity%1.2f"; formated})</h5>
       <img class="img-thumbnail img-result" id="@image" src="/@{masterBase}/@image"/>
     </div>
   }
