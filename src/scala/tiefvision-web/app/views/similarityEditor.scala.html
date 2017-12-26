@@ -21,7 +21,7 @@
   @imageSearchResultDisplay.zipWithIndex.map { case ((_, image), index) =>
     <div class="pull-left text-center">
       <h5>@helpers.rank(index + 1) Closest Dress</h5>
-      <img class="img-thumbnail img-result" id="@image" src="/dresses_db/@image"/>
+      <img class="img-thumbnail img-result" id="@image" src="/@{masterBase}/@image"/>
     </div>
   }
 </div>
