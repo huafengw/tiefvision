@@ -31,12 +31,12 @@ end
 
 local function generateDatabase(imageEncoder)
   -- unflipped
-  local dataFolder = tiefvision_commons.dataPath('db/similarity/img-enc-cnn-encoder')
+  local dataFolder = tiefvision_commons.dataPath('encoded-images')
   local destFolder = tiefvision_commons.dataPath('db/similarity/img-similarity-deeprank')
   generateDatabaseForFolders(dataFolder, destFolder, imageEncoder)
 
   -- flipped
-  local dataFolderFlipped = tiefvision_commons.dataPath('db/similarity/img-enc-cnn-encoder-flipped')
+  local dataFolderFlipped = tiefvision_commons.dataPath('encoded-images-flipped')
   local destFolderFlipped = tiefvision_commons.dataPath('db/similarity/img-flipped-similarity-deeprank')
   generateDatabaseForFolders(dataFolderFlipped, destFolderFlipped, imageEncoder)
 end

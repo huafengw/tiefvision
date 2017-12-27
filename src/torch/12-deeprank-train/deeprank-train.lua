@@ -112,8 +112,8 @@ local function getHeightWindow(input, heightStart)
 end
 
 local function getReferenceSimilarDifferentRaw(datasource)
-  local encodedFolder = tiefvision_commons.dataPath('db/similarity/img-enc-cnn-encoder')
-  local flippedEncodedFolder = tiefvision_commons.dataPath('db/similarity/img-enc-cnn-encoder-flipped')
+  local encodedFolder = tiefvision_commons.dataPath('encoded-images')
+  local flippedEncodedFolder = tiefvision_commons.dataPath('encoded-images-flipped')
   local reference = torch.load(encodedFolder .. '/' .. datasource[1]):cuda()
   local similar
   if (datasource[1] == datasource[2]) then
