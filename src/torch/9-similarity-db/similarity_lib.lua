@@ -21,4 +21,31 @@ function similarity_lib.similarity(referenceEncoding, imageEncoding)
   end
 end
 
+function similarity_lib.similarity2(referenceEncoding, imageEncoding)
+  local similarity = -1
+  local taller = referenceEncoding:clone()
+  local shorter = imageEncoding:clone()
+  if referenceEncoding:size()[2] < imageEncoding:size()[2] then
+    local tmp = taller
+    taller = shorter
+    shorter = tmp
+  end
+  local diff = taller:size()[2] - shorter:size()[2]
+  local minHeight = shorter:size()[2]
+  local width = shorter:size()[1]
+  shorter:resize(width * minHeight * 384)
+  if diff == 0 then
+    return similarity_lib.similarity(referenceEncoding, imageEncoding)
+  end
+  for d = 1, diff do
+    local sub = taller:clone():sub(1, width, d, d + minHeight - 1)
+    sub:resize(width * minHeight * 384)
+    local partialSimilarity = torch.dot(shorter, sub) / (width * minHeight)
+    if partialSimilarity > similarity then
+      similarity = partialSimilarity
+    end
+  end
+  return similarity
+end
+
 return similarity_lib
